@@ -112,8 +112,7 @@ with c2:
 
     if submitted:
         result = get_values(article_text, labels_from_st_tags)
-        st.write(result.labels)
-        st.write(result.scores)
-        df = pd.DataFrame(list(zip(articleurl, result.labels, result.scores)),
-                          columns=['Link', 'labels', 'scores'])
 
+        df = pd.DataFrame(list(zip(articleurl, result["labels"], result["scores"])),
+                          columns=['Link', 'labels', 'scores'])
+        edited_df = st.experimental_data_editor(df)
