@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import streamlit as st
 import requests
 from streamlit_tags import st_tags
+import pandas as pd
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"
 
 headers = {"Authorization": f"Bearer {os.getenv('API_KEY')}"}
@@ -29,7 +30,7 @@ def getArticle(keyword, size):
     querystring = {"id":keyword,"size":size,"number":"1"}
 
     headers = {
-        "X-RapidAPI-Key": "7b530f132bmsh9ce89c66c2eb5d1p1864c8jsnd7c0c3f9ed02",
+        "X-RapidAPI-Key": os.getenv('X-RapidAPI-Key'),
         "X-RapidAPI-Host": "seeking-alpha.p.rapidapi.com"
     }
 
@@ -94,7 +95,6 @@ with c2:
         st.write(Size ,' Article for ', Stock, 'Stock')
         articleurl = getArticle(Stock,int(Size))
         article_text = ArticleText(articleurl)
-        st.write(article_text)
 
 
 
@@ -112,4 +112,8 @@ with c2:
 
     if submitted:
         result = get_values(article_text, labels_from_st_tags)
-        st.write(result)
+        st.write(result.labels)
+        st.write(result.scores)
+        df = pd.DataFrame(list(zip(articleurl, result.labels, result.scores)),
+                          columns=['Link', 'labels', 'scores'])
+
