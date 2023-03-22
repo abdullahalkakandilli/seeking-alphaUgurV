@@ -63,7 +63,6 @@ def get_values(article_text,labels_from_st_tags):
 
 
         label_lists = {}
-        output_ = []
         for element in labels_from_st_tags:
             label_lists[element] = []
 
@@ -73,10 +72,14 @@ def get_values(article_text,labels_from_st_tags):
                 "inputs": row,
                 "parameters": {"candidate_labels": labels_from_st_tags},
             })
-            output_.append((output))
+            for index_, value in enumerate(output['labels']):
+                label_lists[value].append(round(output['scores'][index_], 2))
+
+        for vals in labels_from_st_tags:
+            df[vals] = label_lists[vals]
 
 
-        return output_
+        return df
 
 c2, c3 = st.columns([6, 1])
 
@@ -112,8 +115,10 @@ with c2:
         submitted = st.form_submit_button(label="Submit")
 
     if submitted:
+        df = pd.DataFrame(articleurl)
         result = get_values(article_text, labels_from_st_tags)
+
         st.write(result)
         #df = pd.DataFrame(list(zip(articleurl, result["labels"], result["scores"])),
         #                  columns=['Link', 'labels', 'scores'])
-        #edited_df = st.experimental_data_editor(df)
+        edited_df = st.experimental_data_editor(df)
