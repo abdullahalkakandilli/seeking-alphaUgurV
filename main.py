@@ -63,7 +63,7 @@ def get_values(article_text,labels_from_st_tags):
 
 
         label_lists = {}
-
+        output_ = []
         for element in labels_from_st_tags:
             label_lists[element] = []
 
@@ -73,9 +73,10 @@ def get_values(article_text,labels_from_st_tags):
                 "inputs": row,
                 "parameters": {"candidate_labels": labels_from_st_tags},
             })
+            output_.append((output))
 
 
-        return output
+        return output_
 
 c2, c3 = st.columns([6, 1])
 
@@ -102,9 +103,9 @@ with c2:
     with form:
 
         labels_from_st_tags = st_tags(
-            value=["account", "credit", "reporting"],
+            value=["positive", "negative"],
             maxtags=5,
-            suggestions=["account", "credit", "reporting"],
+            suggestions=["positive", "negative"],
             label="",
         )
 
